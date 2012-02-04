@@ -2,6 +2,7 @@
 
 require_once 'loader.php';
 require_once  'GDLoader.php';
+require_once 'ImagickLoader.php';
 
 class ImageHash {
 
@@ -71,7 +72,7 @@ class ImageHash {
             return new GDLoader();
         } else {
             if (class_exists(Imagick::class)) {
-                return new ImagickLoader(); //в процессе
+                return new ImagickLoader();
             }
         }
 
