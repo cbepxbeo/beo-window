@@ -66,6 +66,20 @@ class ImageHash {
         return join('', $bits);
     }
 
+    public function dHash($path){
+        $bitmap = $this->loader->load($path, 9, 8);
+
+        $bits = [];
+
+        for ($y = 0; $y < 8; $y++) {
+            for ($x = 0; $x < 8; $x++) {
+                $bits[] = ($bitmap[$y][$x] < $bitmap[$y][$x + 1]) ? '1' : '0';
+            }
+        }
+
+        return join('', $bits);
+    }
+
     private function createLoader()
     {
         if (extension_loaded("gd")) {
