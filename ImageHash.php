@@ -105,6 +105,26 @@ class ImageHash {
         return join('', $grays);
     }
 
+    public function getDistance($hash_a, $hash_b)
+    {
+        $aL = strlen($hash_a);
+        $bL = strlen($hash_b);
+
+        if ($aL !== $bL) {
+            return false;
+        }
+
+        $distance = 0;
+
+        for ($i = 0; $i < $aL; $i++) {
+            if ($hash_a[$i] !== $hash_b[$i]) {
+                $distance++;
+            }
+        }
+
+        return $distance;
+    }
+
     private function createLoader()
     {
         if (extension_loaded("gd")) {
