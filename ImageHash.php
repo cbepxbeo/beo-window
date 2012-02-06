@@ -80,6 +80,31 @@ class ImageHash {
         return join('', $bits);
     }
 
+
+    public function aHash($path)
+    {
+        $bitmap = $this->loader->load($path, 8, 8);
+
+        $gray_sum = 0;
+        $grays = [];
+
+        for ($y = 0; $y < 8; $y++) {
+            for ($x = 0; $x < 8; $x++) {
+                $gray = $bitmap[$y][$x];
+                $grays[] = $gray;
+                $gray_sum += $gray;
+            }
+        }
+
+        $average = $gray_sum / 64;
+
+        foreach ($grays as $i => $gray) {
+            $grays[$i] = ($gray >= $average) ? '1' : '0';
+        }
+
+        return join('', $grays);
+    }
+
     private function createLoader()
     {
         if (extension_loaded("gd")) {
