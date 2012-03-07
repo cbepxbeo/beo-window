@@ -1,7 +1,15 @@
 <?php
 
-class GDLoader implements Loader{
-    public function load($path, $width, $height){
+class GDLoader implements Loader
+{
+    /** Загрузка изображения для формирования bitmap
+     * @param $path
+     * @param $width
+     * @param $height
+     * @return array|int[][]
+     */
+    public function load($path, $width, $height)
+    {
         $func_map = [
             IMAGETYPE_JPEG => 'imagecreatefromjpeg',
             IMAGETYPE_PNG  => 'imagecreatefrompng',
@@ -13,13 +21,15 @@ class GDLoader implements Loader{
 
         $type = exif_imagetype($path);
 
-        if (!array_key_exists($type, $func_map)) {
+        if (!array_key_exists($type, $func_map))
+        {
             throw new RuntimeException("неподходящий тип изображения: {$type}");
         }
 
         $func = $func_map[$type];
 
-        if (! function_exists($func)) {
+        if (! function_exists($func))
+        {
             throw new RuntimeException("неопределенная функция: {$func}");
         }
 
@@ -37,8 +47,10 @@ class GDLoader implements Loader{
 
         $bitmap = [];
 
-        for ($y = 0; $y < $height; $y++) {
-            for ($x = 0; $x < $width; $x++) {
+        for ($y = 0; $y < $height; $y++)
+        {
+            for ($x = 0; $x < $width; $x++)
+            {
                 $color = imagecolorsforindex($image, imagecolorat($image, $x, $y));
                 $bitmap[$y][$x] = intval($color['red'] * 0.299 + $color['green'] * 0.587 + $color['blue'] * 0.114);
             }
