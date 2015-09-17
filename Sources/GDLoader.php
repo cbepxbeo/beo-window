@@ -1,14 +1,21 @@
 <?php
 
-class GDLoader implements Loader
+namespace App\ImageHash;
+
+use RuntimeException;
+
+final class GDLoader implements Loader
 {
-    /** Загрузка изображения для формирования bitmap
-     * @param $path
-     * @param $width
-     * @param $height
-     * @return array|int[][]
+
+    /**
+     * Image loader for hashing
+     * @param string $path - Image Path
+     * @param int $width - Image width
+     * @param int $height - Image height
+     * @return int[][] - bitmap
+     * @throws RuntimeException
      */
-    public function load($path, $width, $height)
+    public function load(string $path, int $width, int $height): array
     {
         $func_map = [
             IMAGETYPE_JPEG => 'imagecreatefromjpeg',
@@ -23,14 +30,14 @@ class GDLoader implements Loader
 
         if (!array_key_exists($type, $func_map))
         {
-            throw new RuntimeException("неподходящий тип изображения: {$type}");
+            throw new RuntimeException("wrong image type: {$type}");
         }
 
         $func = $func_map[$type];
 
         if (! function_exists($func))
         {
-            throw new RuntimeException("неопределенная функция: {$func}");
+            throw new RuntimeException("undefined function: {$func}");
         }
 
         $source = $func($path);

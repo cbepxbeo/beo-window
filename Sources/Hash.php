@@ -1,16 +1,13 @@
 <?php
 
-require_once 'loader.php';
-require_once  'GDLoader.php';
-require_once 'ImagickLoader.php';
+namespace App\ImageHash;
 
-class ImageHash {
+use Imagick;
+use RuntimeException;
 
-    /** Конструктор класса, принимает загрузчие
-     * По дефолту, принимает gd (если отсутствует то Imagick)
-     * @param GDLoader|ImagickLoader|mixed $loader
-     */
-    public function __construct($loader = null)
+final class Hash {
+
+    public function __construct(Loader $loader = null)
     {
         if ($loader === null){
             $this->loader = $this->createLoader();
@@ -19,21 +16,20 @@ class ImageHash {
         }
     }
 
-    /** Загрузчик изображения
-     * @param GDLoader|ImagickLoader|mixed $loader
+    /** Image loader
+     * @param Loader $loader
      */
     private $loader;
 
-    /** Общий экземпляр
-     * @var ImageHash
+    /** Shared instance
+     * @var Hash
      */
     private static $instance = null;
 
-    /** Возвращает экземпляр
-     * Если обращение повторное, получает ранее созданный
-     * @return ImageHash
+    /** Get instance
+     * @return Hash
      */
-    public static function shared()
+    public static function shared(): Hash
     {
         if (self::$instance === null){
             self::$instance = new self();
@@ -42,11 +38,11 @@ class ImageHash {
     }
 
 
-    /** Получение pHash
-     * @param $path
-     * @return string - pHash
+    /** Get pHash
+     * @param string $path
+     * @return string
      */
-    public function pHash($path)
+    public function pHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 32, 32);
 
@@ -89,11 +85,11 @@ class ImageHash {
         return join('', $bits);
     }
 
-    /** Получение dHash
-     * @param $path
-     * @return string - pHash
+    /** Get dHash
+     * @param string $path
+     * @return string
      */
-    public function dHash($path)
+    public function dHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 9, 8);
 
@@ -110,11 +106,11 @@ class ImageHash {
         return join('', $bits);
     }
 
-    /** Получение aHash
-     * @param $path
-     * @return string - aHash
+    /** Get aHash
+     * @param string $path
+     * @return string
      */
-    public function aHash($path)
+    public function aHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 8, 8);
 
@@ -141,12 +137,12 @@ class ImageHash {
         return join('', $grays);
     }
 
-    /** Получение дистации
-     * @param $hash_a
-     * @param $hash_b
+    /** Get Distance
+     * @param string $hash_a
+     * @param string $hash_b
      * @return false|int
      */
-    public function getDistance($hash_a, $hash_b)
+    public function getDistance(string $hash_a, string $hash_b)
     {
         $aL = strlen($hash_a);
         $bL = strlen($hash_b);
@@ -170,10 +166,10 @@ class ImageHash {
     }
 
 
-    /** Создание загрузчика
-     * @return GDLoader|ImagickLoader
+    /** Create Loader
+     * @return Loader
      */
-    private function createLoader()
+    private function createLoader(): Loader
     {
         if (extension_loaded("gd"))
         {
@@ -186,10 +182,10 @@ class ImageHash {
             }
         }
 
-        throw new RuntimeException("GD и Imagick не подключены");
+        throw new RuntimeException("GD and Imagick not connected");
     }
 
-    /** Получение таблицы
+    /** Get DctTable
      * @return array|mixed
      */
     private static function getDctTable()

@@ -1,14 +1,16 @@
 <?php
 
+namespace App\ImageHash;
+
 interface Loader
 {
     /**
-     * Загрузчик картинок для хеширования
-     * @param string $path
-     * @param int $width
-     * @param int $height
+     * Image loader for hashing
+     * @param string $path - Image Path
+     * @param int $width - Image width
+     * @param int $height - Image height
      *
-     * @return int[][]
+     * @return int[][] - bitmap
      */
-    public function load($path, $width, $height);
+    public function load(string $path, int $width, int $height): array;
 }
