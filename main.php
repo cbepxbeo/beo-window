@@ -1,6 +1,11 @@
 <?php
 
-function image_hash_classes_autoloader($class) {
+/**
+ * @param $class - Type name
+ * @return void
+ */
+function image_hash_classes_autoloader($class): void
+{
     $explode = explode('\\',  $class);
     include_once 'Sources/' . $explode[count($explode) - 1] . '.php';
 }

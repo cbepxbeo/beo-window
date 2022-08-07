@@ -19,12 +19,12 @@ final class Hash {
     /** Image loader
      * @param Loader $loader
      */
-    private $loader;
+    private Loader $loader;
 
     /** Shared instance
-     * @var Hash
+     * @var ?Hash
      */
-    private static $instance = null;
+    private static ?Hash $instance = null;
 
     /** Get instance
      * @return Hash
@@ -37,12 +37,21 @@ final class Hash {
         return self::$instance;
     }
 
+    /**
+     * @param ImageHash $imageHash
+     * @param string $path
+     * @return string
+     */
+    public function getHash(ImageHash $imageHash, string $path): string {
+        $methodName = $imageHash->name;
+        return $this->$methodName($path);
+    }
 
     /** Get pHash
      * @param string $path
      * @return string
      */
-    public function pHash(string $path): string
+    private function pHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 32, 32);
 
@@ -89,7 +98,7 @@ final class Hash {
      * @param string $path
      * @return string
      */
-    public function dHash(string $path): string
+    private function dHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 9, 8);
 
@@ -110,7 +119,7 @@ final class Hash {
      * @param string $path
      * @return string
      */
-    public function aHash(string $path): string
+    private function aHash(string $path): string
     {
         $bitmap = $this->loader->load($path, 8, 8);
 
@@ -142,7 +151,7 @@ final class Hash {
      * @param string $hash_b
      * @return false|int
      */
-    public function getDistance(string $hash_a, string $hash_b)
+    public function getDistance(string $hash_a, string $hash_b): bool|int
     {
         $aL = strlen($hash_a);
         $bL = strlen($hash_b);
@@ -188,7 +197,7 @@ final class Hash {
     /** Get DctTable
      * @return array|mixed
      */
-    private static function getDctTable()
+    private static function getDctTable(): mixed
     {
         static $table;
 
